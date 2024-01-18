@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="module" src="src/index.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application de génération de QR Code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .button {
+      padding: 10px 20px;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bienvenue sur notre application de gestion de ticket</h1>
+    <button class="button" onclick="generateTicket()">Générer un ticket</button>
+    <button class="button" onclick="showHistory()">Historique des tickets</button>
+  </div>
+
+  <script>
+    function generateTicket() {
+      window.location.href = "page_formulaire.html";
+    }
+
+    function showHistory() {
+      window.location.href = "page_historique.html";
+    }
+  </script>
+</body>
+</html>

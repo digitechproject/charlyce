@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="src/index.js"></script>
+ <script src="qrcode.js"></script>
+
+  <title>Formulaire de génération de ticket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    .form-group label {
+      font-weight: bold;
+    }
+    .form-group input,
+    .form-group select {
+      margin-top: 5px;
+      padding: 5px;
+      font-size: 16px;
+    }
+    .button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+   
+   <div class="container">
+    <h1>Génération de ticket</h1>
+    <div class="form-group">
+        <label for="ticketId">ID du ticket :</label>
+        <input type="text" id="ticketId" required>
+    </div>
+    <div class="form-group">
+        <label for="firstName">Prénom :</label>
+        <input type="text" id="firstName" required>
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Numéro de téléphone :</label>
+        <input type="tel" id="phoneNumber" value="229" pattern="[0-9]+" title="Entrez des chiffres seulement" required>
+    </div>
+    <div class="form-group">
+        <label for="gender">Sexe :</label>
+        <select id="gender" required>
+            <option value="M">Masculin</option>
+            <option value="F">Féminin</option>
+        </select>
+    </div>
+    <button class="button" onclick="generateQRCode()">Valider</button>
+    <div id="qrCode"></div>
+</div>
+
+<script>
+    function generateQRCode() {
+        // Validation des données
+        var ticketId = document.getElementById("ticketId").value;
+        var firstName = document.getElementById("firstName").value;
+        var phoneNumber = document.getElementById("phoneNumber").value;
+        var gender = document.getElementById("gender").value;
+
+        if (!ticketId || !firstName || !phoneNumber || !gender) {
+            alert("Veuillez remplir tous les champs du formulaire.");
+            return;
+        }
+
+        // Générer le contenu du QR code en utilisant les informations du formulaire
+        var qrCodeContent = ticketId + "-" + firstName + "-" + phoneNumber + "-" + gender;
+
+        // Utiliser la bibliothèque qrcode.js pour générer le QR code
+        var qrCode = new QRCode(document.getElementById("qrCode"), {
+            text: qrCodeContent,
+            width: 128,
+            height: 128
+        });
+// Rediriger vers la page "tickets générés" avec les informations nécessaires
+window.location.href = "page_tickets.html?id=" + ticketId + "&firstName=" + firstName + "&phoneNumber=" + phoneNumber + "&gender=" + gender;
+
+        // Enregistrer les informations du ticket dans Firebase Firestore
+        /*
+        const db = getFirestore(app);
+        addDoc(collection(db, "tickets"), {
+            ticketId: ticketId,
+            firstName: firstName,
+            phoneNumber: phoneNumber,
+            gender: gender
+        })
+            .then((docRef) => {
+                console.log("Document written with ID: ", docRef.id);
+                // Rediriger vers la page "tickets générés" avec les informations nécessaires
+                window.location.href = "page_tickets.html?id=" + ticketId + "&firstName=" + firstName + "&phoneNumber=" + phoneNumber + "&gender=" + gender;
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+                alert("Une erreur s'est produite lors de l'enregistrement du ticket. Veuillez réessayer plus tard.");
+            });
+    */}
+</script>
+
+</body>
+</html>

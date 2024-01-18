@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<script src="qrcode.js"></script>
+<script src="qrcode.min.js"></script>
+<script type="module" src="src/index.js"></script>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tickets générés</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+display: flex;
+align-items: center;
+ justify-content: center;
+height: 100vh;
+margin: 0;
+}
+.ticket-container {
+ text-align: center;
+}
+.ticket-image-container {
+position: relative;
+}
+.ticket-image {
+width: 100%;
+height: auto;
+}
+#qrCode {
+    position: absolute;
+    bottom: 47.5%; /* ajustez la position verticale en pourcentage par rapport à la hauteur de l'image */
+    left: 41.5%; /* ajustez la position horizontale en pourcentage par rapport à la largeur de l'image */
+    width: 20%; /* ajustez la largeur en pourcentage par rapport à la largeur de l'image */
+    height:  20%; /* ajustez la hauteur en pourcentage par rapport à la hauteur de l'image */
+}
+.button-container {
+ margin-top: 20px;
+}
+.button {
+padding: 10px 20px;
+margin-right: 10px;
+font-size: 16px;
+}
+</style>
+</head>
+<body>
+<div class="ticket-container">
+<h1>Tickets générés</h1>
+<div class="ticket-image-container">
+<img class="ticket-image" src="tickets.png" alt="Nouveau ticket">
+<div id="qrCode"></div>
+</div>
+
+<div class="button-container">
+<button class="button" onclick="saveTicket()">Sauvegarder</button>
+<button class="button" onclick="shareTicket()">Partager via WhatsApp</button>
+</div>
+</div>
+
+<script>
+var urlParams = new URLSearchParams(window.location.search);
+var ticketId = urlParams.get("id");
+var firstName = urlParams.get("firstName");
+    var phoneNumber = urlParams.get("phoneNumber");
+    var gender = urlParams.get("gender");
+
+    if (ticketId && firstName && phoneNumber && gender) {
+      generateTicket(ticketId, firstName, phoneNumber, gender);
+    }
+
+    function generateTicket(ticketId, firstName, phoneNumber, gender) {
+      var qrCodeContent = ticketId + "-" + firstName + "-" + phoneNumber + "-" + gender;
+      var ticketImage = document.querySelector(".ticket-image");
+      var qrCodeContainer = document.getElementById("qrCode");
+      var qrCodeSize = Math.min(ticketImage.clientWidth, ticketImage.clientHeight) * 0.2; // Taille du QR code en fonction de celle de l'image
+
+      var qrCode = new QRCode(qrCodeContainer, {
+        text: qrCodeContent,
+        width: qrCodeSize,
+        height: qrCodeSize
+      });
+    }
+
+    function saveTicket() {
+      var ticketImage = document.querySelector(".ticket-image");
+      var qrCodeContainer = document.getElementById("qrCode");
+      var ticketCanvas = document.createElement("canvas");
+      var canvasContext = ticketCanvas.getContext("2d");
+
+      ticketCanvas.width = ticketImage.clientWidth;
+      ticketCanvas.height = ticketImage.clientHeight;
+
+      canvasContext.drawImage(ticketImage, 0, 0); // Dessiner l'image du ticket sur le canevas
+      canvasContext.drawImage(qrCodeContainer.firstChild, 0, 0); // Dessiner le QR code sur le canevas
+
+      var downloadLink = document.createElement("a");
+      downloadLink.href = ticketCanvas.toDataURL(); // Convertir le canevas en URL de données
+      downloadLink.download = firstName + ".png";
+      downloadLink.click();
+    }
+
+    function shareTicket() {
+      var ticketImage = document.querySelector(".ticket-image");
+      var qrCodeContainer = document.getElementById("qrCode");
+      var ticketCanvas = document.createElement("canvas");
+      var canvasContext = ticketCanvas.getContext("2d");
+
+      ticketCanvas.width = ticketImage.clientWidth;
+      ticketCanvas.height = ticketImage.clientHeight;
+
+      canvasContext.drawImage(ticketImage, 0, 0); // Dessiner l'image du ticket sur le canevas
+      canvasContext.drawImage(qrCodeContainer.firstChild, 0, 0); // Dessiner le QR code sur le canevas
+
+      var shareLink = "whatsapp://send?text=" + encodeURIComponent(ticketCanvas.toDataURL()) + "&phone=" + phoneNumber;
+      window.open(shareLink);
+    }
+  </script>
+<script>
+function saveTicket() {
+      var ticketImage = document.querySelector(".ticket-image");
+      var qrCodeContainer = document.getElementById("qrCode");
+      var ticketCanvas = document.createElement("canvas");
+      var canvasContext = ticketCanvas.getContext("2d");
+
+      ticketCanvas.width = ticketImage.clientWidth;
+      ticketCanvas.height = ticketImage.clientHeight;
+
+      canvasContext.drawImage(ticketImage, 0, 0); // Dessiner l'image du ticket sur le canevas
+      canvasContext.drawImage(qrCodeContainer.firstChild, 0, 0); // Dessiner le QR code sur le canevas
+
+      var downloadLink = document.createElement("a");
+      downloadLink.href = ticketCanvas.toDataURL(); // Convertir le canevas en URL de données
+      downloadLink.download = firstName + ".png";
+      downloadLink.click();
+
+}
+
+    function shareTicket() {
+      var ticketImage = document.querySelector(".ticket-image");
+      var qrCodeContainer = document.getElementById("qrCode");
+      var ticketCanvas = document.createElement("canvas");
+      var canvasContext = ticketCanvas.getContext("2d");
+
+      ticketCanvas.width = ticketImage.clientWidth;
+      ticketCanvas.height = ticketImage.clientHeight;
+
+      canvasContext.drawImage(ticketImage, 0, 0); // Dessiner l'image du ticket sur le canevas
+      canvasContext.drawImage(qrCodeContainer.firstChild, 0, 0); // Dessiner le QR code sur le canevas
+
+      var shareLink = "whatsapp://send?text=" + encodeURIComponent(ticketCanvas.toDataURL()) + "&phone=" + phoneNumber;
+      window.open(shareLink);
+ }
+  </script>
+</body>
+</html>
